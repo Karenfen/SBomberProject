@@ -32,8 +32,8 @@ SBomber::SBomber()
 
     LevelGUI* pGUI = new LevelGUI;
     pGUI->SetParam(passedTime, fps, bombsNumber, score);
-    const uint16_t maxX = GetMaxX();
-    const uint16_t maxY = GetMaxY(); 
+    const uint16_t maxX = ScreenSingleton::getInstance().GetMaxX();
+    const uint16_t maxY = ScreenSingleton::getInstance().GetMaxY();
     const uint16_t offset = 3;
     const uint16_t width = maxX - 7;
     pGUI->SetPos(offset, offset);
@@ -324,7 +324,7 @@ void SBomber::DrawFrame()
         }
     }
 
-    GotoXY(0, 0);
+    ScreenSingleton::getInstance().GotoXY(0, 0);
     fps++;
 
     FindLevelGUI()->SetParam(passedTime, fps, bombsNumber, score);

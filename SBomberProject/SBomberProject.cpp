@@ -22,7 +22,7 @@ int main(void)
             game.ProcessKBHit();
         }
 
-        MyTools::ClrScr();
+        MyTools::ScreenSingleton::getInstance().ClrScr();
 
         game.DrawFrame();
         game.MoveObjects();

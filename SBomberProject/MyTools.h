@@ -28,15 +28,27 @@ namespace MyTools {
 
 	//=============================================================================================
 
-	void ClrScr();
+    class ScreenSingleton
+    {
+    public:
 
-	void __fastcall GotoXY(double x, double y);
+        static ScreenSingleton& getInstance()
+        {
+            static ScreenSingleton theInstance;
+            return theInstance;
+        }
+        void ClrScr();
+        void __fastcall GotoXY(double x, double y);
+        uint16_t GetMaxX();
+        uint16_t GetMaxY();
+        void SetColor(ConsoleColor color);
 
-	uint16_t GetMaxX();
+    private:
 
-	uint16_t GetMaxY();
-
-    void SetColor(ConsoleColor color);
+        ScreenSingleton() { }
+        ScreenSingleton(const ScreenSingleton& root) = delete;
+        ScreenSingleton& operator=(const ScreenSingleton&) = delete;
+    };
 
 	//=============================================================================================
 
