@@ -80,12 +80,12 @@ namespace MyTools {
         return string(buf);
     }
 
-    void __fastcall LogSingleton::OpenLogFile(const string& FN)
+    void __fastcall FileLoggerSingleton::OpenLogFile(const string& FN)
     {
         logOut.open(FN, ios_base::out, ios_base::trunc);
     }
 
-    void LogSingleton::CloseLogFile()
+    void FileLoggerSingleton::CloseLogFile()
     {
         if (logOut.is_open())
         {
@@ -93,7 +93,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall LogSingleton::WriteToLog(const string& str)
+    void __fastcall FileLoggerSingleton::WriteToLog(const string& str)
     {
         if (logOut.is_open())
         {
@@ -101,7 +101,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall LogSingleton::WriteToLog(const string& str, int n)
+    void __fastcall FileLoggerSingleton::WriteToLog(const string& str, int n)
     {
         if (logOut.is_open())
         {
@@ -109,12 +109,53 @@ namespace MyTools {
         }
     }
 
-    void __fastcall LogSingleton::WriteToLog(const string& str, double d)
+    void __fastcall FileLoggerSingleton::WriteToLog(const string& str, double d)
     {
         if (logOut.is_open())
         {
             logOut << GetCurDateTime() << " - " << str << d << endl;
         }
+    }
+
+
+    void __fastcall FileLoggerProxySingleton::OpenLogFile(const string& FN)
+    {
+        realLogger->OpenLogFile(FN);
+    }
+
+    void FileLoggerProxySingleton::CloseLogFile()
+    {
+        realLogger->CloseLogFile();
+    }
+
+    void __fastcall FileLoggerProxySingleton::WriteToLog(const string& str)
+    {
+
+        logOut << ++counterLog << "\t";
+
+        realLogger->WriteToLog(str);
+    }
+
+    void __fastcall FileLoggerProxySingleton::WriteToLog(const string& str, int n)
+    {
+        
+        logOut << ++counterLog << "\t";
+
+        realLogger->WriteToLog(str, n);
+    }
+
+    void __fastcall FileLoggerProxySingleton::WriteToLog(const string& str, double d)
+    {
+
+        logOut << ++counterLog << "\t";
+
+        realLogger->WriteToLog(str, d);
+    }
+
+    FileLoggerProxySingleton::FileLoggerProxySingleton()
+    {
+        realLogger = &FileLoggerSingleton::getInstance();
+        counterLog = 0;
     }
 
     //=============================================================================================

@@ -52,33 +52,78 @@ namespace MyTools {
 
 	//=============================================================================================
 
-    class LogSingleton
+    class FileLogger
     {
     public:
 
-        static LogSingleton& getInstance()
+        virtual void __fastcall OpenLogFile(const std::string& FN) = 0;
+
+        virtual void CloseLogFile() = 0;
+
+        virtual void __fastcall WriteToLog(const std::string& str) = 0;
+
+        virtual void __fastcall WriteToLog(const std::string& str, int n) = 0;
+
+        virtual void __fastcall WriteToLog(const std::string& str, double d) = 0;
+
+    };
+
+    class FileLoggerSingleton : public FileLogger
+    {
+    public:
+
+        static FileLoggerSingleton& getInstance()
         {
-            static LogSingleton theInstance;
+            static FileLoggerSingleton theInstance;
             return theInstance;
         }
 
-        void __fastcall OpenLogFile(const std::string& FN);
+        virtual void __fastcall OpenLogFile(const std::string& FN);
 
-        void CloseLogFile();
+        virtual void CloseLogFile();
 
-        void __fastcall WriteToLog(const std::string& str);
+        virtual void __fastcall WriteToLog(const std::string& str);
 
-        void __fastcall WriteToLog(const std::string& str, int n);
+        virtual void __fastcall WriteToLog(const std::string& str, int n);
 
-        void __fastcall WriteToLog(const std::string& str, double d);
+        virtual void __fastcall WriteToLog(const std::string& str, double d);
 
     private:
 
-        LogSingleton() {}
-        LogSingleton(const LogSingleton& root) = delete;
-        LogSingleton& operator=(const LogSingleton&) = delete;
+        FileLoggerSingleton() {}
+        FileLoggerSingleton(const FileLoggerSingleton& root) = delete;
+        FileLoggerSingleton& operator=(const FileLoggerSingleton&) = delete;
     };
 	
+    class FileLoggerProxySingleton : public FileLogger
+    {
+    public:
+
+        static FileLoggerProxySingleton& getInstance()
+        {
+            static FileLoggerProxySingleton theInstance;
+            return theInstance;
+        }
+
+        virtual void __fastcall OpenLogFile(const std::string& FN);
+
+        virtual void CloseLogFile();
+
+        virtual void __fastcall WriteToLog(const std::string& str);
+
+        virtual void __fastcall WriteToLog(const std::string& str, int n);
+
+        virtual void __fastcall WriteToLog(const std::string& str, double d);
+
+    private:
+
+        FileLoggerSingleton* realLogger { nullptr };
+        uint16_t counterLog;
+
+        FileLoggerProxySingleton();
+        FileLoggerProxySingleton(const FileLoggerProxySingleton& root) = delete;
+        FileLoggerProxySingleton& operator=(const FileLoggerProxySingleton&) = delete;
+    };
 
 	//=============================================================================================
 
