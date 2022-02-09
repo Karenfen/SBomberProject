@@ -25,7 +25,7 @@ namespace MyTools {
         system("cls");
     }
 
-    void __fastcall ScreenSingleton::GotoXY(double x, double y)
+    void ScreenSingleton::GotoXY(double x, double y)
     {
         const COORD cc = { short(x), short(y) };
         SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cc);
@@ -80,7 +80,7 @@ namespace MyTools {
         return string(buf);
     }
 
-    void __fastcall FileLoggerSingleton::OpenLogFile(const string& FN)
+    void FileLoggerSingleton::OpenLogFile(const string& FN)
     {
         logOut.open(FN, ios_base::out, ios_base::trunc);
     }
@@ -93,7 +93,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall FileLoggerSingleton::WriteToLog(const string& str)
+    void FileLoggerSingleton::WriteToLog(const string& str)
     {
         if (logOut.is_open())
         {
@@ -101,7 +101,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall FileLoggerSingleton::WriteToLog(const string& str, int n)
+    void FileLoggerSingleton::WriteToLog(const string& str, int n)
     {
         if (logOut.is_open())
         {
@@ -109,7 +109,7 @@ namespace MyTools {
         }
     }
 
-    void __fastcall FileLoggerSingleton::WriteToLog(const string& str, double d)
+    void FileLoggerSingleton::WriteToLog(const string& str, double d)
     {
         if (logOut.is_open())
         {
@@ -118,38 +118,53 @@ namespace MyTools {
     }
 
 
-    void __fastcall FileLoggerProxySingleton::OpenLogFile(const string& FN)
+    void FileLoggerProxySingleton::OpenLogFile(const string& FN)
     {
-        realLogger->OpenLogFile(FN);
+        if (realLogger)
+        {
+            realLogger->OpenLogFile(FN);
+        }
     }
 
     void FileLoggerProxySingleton::CloseLogFile()
     {
-        realLogger->CloseLogFile();
+        if (realLogger)
+        {
+            realLogger->CloseLogFile();
+        }
     }
 
-    void __fastcall FileLoggerProxySingleton::WriteToLog(const string& str)
+    void FileLoggerProxySingleton::WriteToLog(const string& str)
     {
 
         logOut << ++counterLog << "\t";
 
-        realLogger->WriteToLog(str);
+        if (realLogger)
+        {
+            realLogger->WriteToLog(str);
+        }
     }
 
-    void __fastcall FileLoggerProxySingleton::WriteToLog(const string& str, int n)
+    void FileLoggerProxySingleton::WriteToLog(const string& str, int n)
     {
         
         logOut << ++counterLog << "\t";
 
-        realLogger->WriteToLog(str, n);
+        if (realLogger)
+        {
+            realLogger->WriteToLog(str, n);
+        }
     }
 
-    void __fastcall FileLoggerProxySingleton::WriteToLog(const string& str, double d)
+    void FileLoggerProxySingleton::WriteToLog(const string& str, double d)
     {
 
         logOut << ++counterLog << "\t";
 
-        realLogger->WriteToLog(str, d);
+        if (realLogger)
+        {
+            realLogger->WriteToLog(str, d);
+        }
     }
 
     FileLoggerProxySingleton::FileLoggerProxySingleton()

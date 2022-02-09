@@ -56,15 +56,17 @@ namespace MyTools {
     {
     public:
 
-        virtual void __fastcall OpenLogFile(const std::string& FN) = 0;
+        virtual void OpenLogFile(const std::string& FN) = 0;
 
         virtual void CloseLogFile() = 0;
 
-        virtual void __fastcall WriteToLog(const std::string& str) = 0;
+        virtual void WriteToLog(const std::string& str) = 0;
 
-        virtual void __fastcall WriteToLog(const std::string& str, int n) = 0;
+        virtual void WriteToLog(const std::string& str, int n) = 0;
 
-        virtual void __fastcall WriteToLog(const std::string& str, double d) = 0;
+        virtual void WriteToLog(const std::string& str, double d) = 0;
+
+        virtual ~FileLogger() {}
 
     };
 
@@ -78,15 +80,15 @@ namespace MyTools {
             return theInstance;
         }
 
-        virtual void __fastcall OpenLogFile(const std::string& FN);
+        void OpenLogFile(const std::string& FN) override;
 
-        virtual void CloseLogFile();
+        void CloseLogFile() override;
 
-        virtual void __fastcall WriteToLog(const std::string& str);
+        void WriteToLog(const std::string& str) override;
 
-        virtual void __fastcall WriteToLog(const std::string& str, int n);
+        void WriteToLog(const std::string& str, int n) override;
 
-        virtual void __fastcall WriteToLog(const std::string& str, double d);
+        void WriteToLog(const std::string& str, double d) override;
 
     private:
 
@@ -105,15 +107,15 @@ namespace MyTools {
             return theInstance;
         }
 
-        virtual void __fastcall OpenLogFile(const std::string& FN);
+        void OpenLogFile(const std::string& FN) override;
 
-        virtual void CloseLogFile();
+        void CloseLogFile() override;
 
-        virtual void __fastcall WriteToLog(const std::string& str);
+        void WriteToLog(const std::string& str) override;
 
-        virtual void __fastcall WriteToLog(const std::string& str, int n);
+        void WriteToLog(const std::string& str, int n) override;
 
-        virtual void __fastcall WriteToLog(const std::string& str, double d);
+        void WriteToLog(const std::string& str, double d) override;
 
     private:
 
