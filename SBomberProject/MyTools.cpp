@@ -6,7 +6,6 @@
 
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <chrono>
 
 
@@ -16,7 +15,6 @@ using namespace std;
 
 namespace MyTools {
 
-    ofstream logOut;
 
     //=============================================================================================
 

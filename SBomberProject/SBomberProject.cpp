@@ -1,5 +1,7 @@
 ﻿
 #include <conio.h>
+#include <chrono>
+#include <thread>
 
 #include "SBomber.h"
 #include "MyTools.h"
@@ -22,6 +24,7 @@ int main(void)
             game.ProcessKBHit();
         }
 
+        std::this_thread::sleep_for(500ms);
         MyTools::ScreenSingleton::getInstance().ClrScr();
 
         game.DrawFrame();

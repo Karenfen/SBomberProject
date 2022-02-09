@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <fstream>
 
 namespace MyTools {
 
@@ -73,6 +74,8 @@ namespace MyTools {
         void __fastcall WriteToLog(const std::string& str, double d);
 
     private:
+
+        std::ofstream logOut;
 
         LogSingleton() {}
         LogSingleton(const LogSingleton& root) = delete;
