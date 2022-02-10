@@ -16,7 +16,7 @@ void Bomb::Draw() const
 
 void BombDecorator::Move(uint16_t time)
 {
-	bomb.Move(time * 1.5);
+	bomb.Move(time);
 }
 
 void BombDecorator::Draw() const
@@ -50,4 +50,14 @@ double BombDecorator::GetX() const
 void BombDecorator::SetWidth(uint16_t widthN)
 {
 	bomb.SetWidth(widthN);
+}
+
+void BombDecorator::SetSpeed(double sp)
+{
+	bomb.SetSpeed(sp);
+}
+
+void BombDecorator::SetDirection(double dx, double dy)
+{
+	bomb.SetDirection(dx, dy);
 }

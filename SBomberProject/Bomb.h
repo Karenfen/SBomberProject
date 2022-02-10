@@ -18,6 +18,8 @@ class BombDecorator : public DynamicObject
 {
 public:
 
+	static const uint16_t BombCost = 15;
+
 	void Draw() const override;
 	void Move(uint16_t time) override;
 	void SetPos(double nx, double ny) override;
@@ -25,6 +27,8 @@ public:
 	double GetY() const override;
 	double GetX() const override;
 	void SetWidth(uint16_t widthN) override;
+	void SetSpeed(double sp) override;
+	void SetDirection(double dx, double dy) override;
 
 private:
 
