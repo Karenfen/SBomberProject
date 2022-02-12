@@ -1,6 +1,7 @@
 
 #include <conio.h>
 #include <windows.h>
+#include <tuple>
 
 #include "MyTools.h"
 #include "SBomber.h"
@@ -11,6 +12,7 @@
 
 using namespace std;
 using namespace MyTools;
+
 
 SBomber::SBomber()
     : exitFlag(false),
@@ -123,16 +125,17 @@ void SBomber::CheckPlaneAndLevelGUI()
 
 void SBomber::CheckBombsAndGround() 
 {
-    vector<Bomb*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
-    for (size_t i = 0; i < vecBombs.size(); i++)
+    for (auto itBomb = begin(); itBomb != end(); ++itBomb)
     {
-        if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
+        if ((*itBomb)->GetY() >= y) // Пересечение бомбы с землей
         {
-            pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
-            DeleteDynamicObj(vecBombs[i]);
+            pGround->AddCrater((*itBomb)->GetX());
+            CheckDestoyableObjects(*itBomb);
+            //DeleteDynamicObj(*itBomb);
+            //--itBomb;
+            itBomb = erase(itBomb);
         }
     }
 
@@ -220,22 +223,6 @@ Ground* SBomber::FindGround() const
     }
 
     return nullptr;
-}
-
-vector<Bomb*> SBomber::FindAllBombs() const
-{
-    vector<Bomb*> vecBombs;
-
-    for (size_t i = 0; i < vecDynamicObj.size(); i++)
-    {
-        Bomb* pBomb = dynamic_cast<Bomb*>(vecDynamicObj[i]);
-        if (pBomb != nullptr)
-        {
-            vecBombs.push_back(pBomb);
-        }
-    }
-
-    return vecBombs;
 }
 
 Plane* SBomber::FindPlane() const
@@ -365,4 +352,111 @@ void SBomber::DropBomb()
         bombsNumber--;
         score -= Bomb::BombCost;
     }
+}
+
+SBomber::BombIterator SBomber::begin()
+{
+    BombIterator it(vecDynamicObj);
+    return it;
+}
+
+SBomber::BombIterator SBomber::end()
+{
+    BombIterator it(vecDynamicObj);
+    it.reset();
+    return it;
+}
+
+SBomber::BombIterator SBomber::erase(SBomber::BombIterator it)
+{
+
+    for (auto vecIter = vecDynamicObj.begin(); vecIter != vecDynamicObj.end(); vecIter++)
+    {
+        if (*vecIter == *it)
+        {
+            vecDynamicObj.erase(vecIter);
+            break;
+        }
+    }
+
+    return --it;
+}
+
+SBomber::BombIterator::BombIterator(std::vector<DynamicObject*>& ref) : iterVector(ref), target(nullptr), curIndex(-1) { ++(*this); }
+
+void SBomber::BombIterator::reset() { curIndex = -1; target = nullptr; }
+
+SBomber::BombIterator& SBomber::BombIterator::operator++()
+{
+    ++curIndex;
+
+    if (curIndex == -1)
+        curIndex = 0;
+
+    for (; curIndex < iterVector.size(); ++curIndex)
+    {
+
+        Bomb* pBomb = dynamic_cast<Bomb*>(iterVector[curIndex]);
+        if (pBomb != nullptr)
+        {
+            target = &pBomb;
+            break;
+        }
+    }
+
+    if (curIndex == iterVector.size())
+    {
+        curIndex = -1;
+        target = nullptr;
+    }
+
+    return *this;
+}
+
+SBomber::BombIterator& SBomber::BombIterator::operator--()
+{
+    --curIndex;
+
+    if (curIndex == -1)
+        curIndex = iterVector.size() - 1;
+
+    for (; curIndex >= 0; --curIndex)
+    {
+        Bomb* pBomb = dynamic_cast<Bomb*>(iterVector[curIndex]);
+        if (pBomb != nullptr)
+        {
+            target = &pBomb;
+            break;
+        }
+    }
+
+    if (curIndex == -1)
+        target = nullptr;
+
+    return *this;
+}
+
+Bomb* SBomber::BombIterator::operator* ()
+{
+    return dynamic_cast<Bomb*>(iterVector.at(curIndex));
+}
+
+bool SBomber::BombIterator::operator== (BombIterator it)
+{
+    return std::tie(curIndex, target, iterVector) == std::tie(it.curIndex, it.target, it.iterVector);
+}
+
+bool SBomber::BombIterator::operator!=(BombIterator it)
+{
+    return !(*this == it);
+}
+
+SBomber::BombIterator& SBomber::BombIterator::operator= (const BombIterator& it)
+{
+
+    iterVector = it.iterVector;
+    curIndex = it.curIndex;
+    target = it.target;
+
+    return *this;
 }

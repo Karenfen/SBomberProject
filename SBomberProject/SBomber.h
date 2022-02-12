@@ -8,6 +8,8 @@
 #include "Ground.h"
 #include "Tank.h"
 
+
+
 class SBomber
 {
 public:
@@ -25,8 +27,36 @@ public:
     void MoveObjects();
     void CheckObjects();
 
-private:
+    //================================================
 
+    class BombIterator
+    {
+    private:
+
+        int curIndex;
+        Bomb** target;
+        std::vector<DynamicObject*>& iterVector;
+
+    public:
+
+        BombIterator(std::vector<DynamicObject*>& ref);
+        void reset();
+        BombIterator& operator++();
+        BombIterator& operator--();
+        Bomb* operator* ();
+        bool operator== (BombIterator it);
+        bool operator!=(BombIterator it);
+        BombIterator& operator= (const BombIterator& it);
+    };
+
+    //================================================
+    BombIterator begin();
+    BombIterator end();
+    BombIterator erase(BombIterator it);
+    //================================================
+
+private:
+    
     void CheckPlaneAndLevelGUI();
     void CheckBombsAndGround();
     void __fastcall CheckDestoyableObjects(Bomb* pBomb);
@@ -38,7 +68,6 @@ private:
     Plane * FindPlane() const;
     LevelGUI * FindLevelGUI() const;
     std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
-    std::vector<Bomb*> FindAllBombs() const;
 
     void DropBomb();
 
