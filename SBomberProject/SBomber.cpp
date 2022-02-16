@@ -20,7 +20,7 @@ SBomber::SBomber()
     passedTime(0),
     fps(0),
     bombsNumber(10),
-    score(0)
+    score(20)
 {
     LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
@@ -136,9 +136,17 @@ void SBomber::CheckBombsAndGround()
         }
     }
 
+    if (FindPlane()->GetY() >= y)
+    {
+        pGround->AddCrater(FindPlane()->GetX());
+        CheckDestoyableObjects(FindPlane());
+        DeleteDynamicObj(FindPlane());
+        exitFlag = true;
+    }
+
 }
 
-void SBomber::CheckDestoyableObjects(Bomb * pBomb)
+void SBomber::CheckDestoyableObjects(DynamicObject * pBomb)
 {
     vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
     const double size = pBomb->GetWidth();
@@ -292,11 +300,13 @@ void SBomber::ProcessKBHit()
         break;
 
     case 'b':
-        DropBomb();
+        if(score > 0)
+            DropBomb();
         break;
 
     case 'B':
-        DropBomb();
+        if(score > 0)
+            DropBomb();
         break;
 
     default:
@@ -365,4 +375,9 @@ void SBomber::DropBomb()
         bombsNumber--;
         score -= Bomb::BombCost;
     }
+}
+
+uint16_t SBomber::GetScore()
+{
+    return score;
 }
