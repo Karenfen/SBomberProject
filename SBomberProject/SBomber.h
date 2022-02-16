@@ -25,11 +25,13 @@ public:
     void MoveObjects();
     void CheckObjects();
 
+    uint16_t GetScore();
+
 private:
 
     void CheckPlaneAndLevelGUI();
     void CheckBombsAndGround();
-    void __fastcall CheckDestoyableObjects(Bomb* pBomb);
+    void __fastcall CheckDestoyableObjects(DynamicObject* pBomb);
 
     void __fastcall DeleteDynamicObj(DynamicObject * pBomb);
     void __fastcall DeleteStaticObj(GameObject* pObj);

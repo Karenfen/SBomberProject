@@ -2,6 +2,7 @@
 #include <conio.h>
 #include <chrono>
 #include <thread>
+#include <iostream>
 
 #include "SBomber.h"
 #include "MyTools.h"
@@ -37,5 +38,6 @@ int main(void)
 
     MyTools::LogSingleton::getInstance().CloseLogFile();
 
+    std::cout << "\n\n\tGAME OVER!!!\tTotal score:\t" << game.GetScore() << std::endl;
     return 0;
 }
