@@ -71,6 +71,7 @@ SBomber::SBomber()
     pBomb->SetSize(SMALL_CRATER_SIZE);
     vecDynamicObj.push_back(pBomb);
     */
+    implementer = new CollisionDetector(this);
 }
 
 SBomber::~SBomber()
@@ -109,59 +110,9 @@ void SBomber::CheckObjects()
 {
     LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-    CheckPlaneAndLevelGUI();
-    CheckBombsAndGround();
+    implementer->CheckPlaneAndLevelGUI();
+    implementer->CheckBombsAndGround();
 };
-
-void SBomber::CheckPlaneAndLevelGUI()
-{
-    if (FindPlane()->GetX() > FindLevelGUI()->GetFinishX())
-    {
-        exitFlag = true;
-    }
-}
-
-void SBomber::CheckBombsAndGround() 
-{
-    vector<Bomb*> vecBombs = FindAllBombs();
-    Ground* pGround = FindGround();
-    const double y = pGround->GetY();
-    for (size_t i = 0; i < vecBombs.size(); i++)
-    {
-        if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
-        {
-            pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
-            DeleteDynamicObj(vecBombs[i]);
-        }
-    }
-
-    if (FindPlane()->GetY() >= y)
-    {
-        pGround->AddCrater(FindPlane()->GetX());
-        CheckDestoyableObjects(FindPlane());
-        DeleteDynamicObj(FindPlane());
-        exitFlag = true;
-    }
-
-}
-
-void SBomber::CheckDestoyableObjects(DynamicObject * pBomb)
-{
-    vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
-    const double size = pBomb->GetWidth();
-    const double size_2 = size / 2;
-    for (size_t i = 0; i < vecDestoyableObjects.size(); i++)
-    {
-        const double x1 = pBomb->GetX() - size_2;
-        const double x2 = x1 + size;
-        if (vecDestoyableObjects[i]->isInside(x1, x2))
-        {
-            score += vecDestoyableObjects[i]->GetScore();
-            DeleteStaticObj(vecDestoyableObjects[i]);
-        }
-    }
-}
 
 void SBomber::DeleteDynamicObj(DynamicObject* pObj)
 {
@@ -380,4 +331,57 @@ void SBomber::DropBomb()
 uint16_t SBomber::GetScore()
 {
     return score;
+}
+
+//=======================================================
+
+void CollisionDetector::CheckPlaneAndLevelGUI()
+{
+    if (bomber->FindPlane()->GetX() > bomber->FindLevelGUI()->GetFinishX())
+    {
+        bomber->exitFlag = true;
+    }
+}
+
+void CollisionDetector::CheckBombsAndGround()
+{
+    std::vector<Bomb*> vecBombs = bomber->FindAllBombs();
+    Ground* pGround = bomber->FindGround();
+    const double y = pGround->GetY();
+    for (size_t i = 0; i < vecBombs.size(); i++)
+    {
+        if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
+        {
+            pGround->AddCrater(vecBombs[i]->GetX());
+            CheckDestoyableObjects(vecBombs[i]);
+            bomber->DeleteDynamicObj(vecBombs[i]);
+        }
+    }
+
+    Plane* plane = bomber->FindPlane();
+    if (plane->GetY() >= y)
+    {
+        pGround->AddCrater(plane->GetX());
+        CheckDestoyableObjects(plane);
+        bomber->DeleteDynamicObj(plane);
+        bomber->exitFlag = true;
+    }
+
+}
+
+void CollisionDetector::CheckDestoyableObjects(DynamicObject* obj)
+{
+    std::vector<DestroyableGroundObject*> vecDestoyableObjects = bomber->FindDestoyableGroundObjects();
+    const double size = obj->GetWidth();
+    const double size_2 = size / 2;
+    for (size_t i = 0; i < vecDestoyableObjects.size(); i++)
+    {
+        const double x1 = obj->GetX() - size_2;
+        const double x2 = x1 + size;
+        if (vecDestoyableObjects[i]->isInside(x1, x2))
+        {
+            bomber->score += vecDestoyableObjects[i]->GetScore();
+            bomber->DeleteStaticObj(vecDestoyableObjects[i]);
+        }
+    }
 }
