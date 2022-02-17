@@ -1,6 +1,7 @@
 
 #include <conio.h>
 #include <windows.h>
+#include <iostream>
 
 #include "MyTools.h"
 #include "SBomber.h"
@@ -58,7 +59,37 @@ SBomber::SBomber()
     pTank->SetPos(50, groundY - 1);
     vecStaticObj.push_back(pTank);
 
-    House * pHouse = new House;
+
+    HouseDirector dirH;
+    HouseBuilderA builderA;
+    HouseBuilderB builderB;
+    HouseBuilderC builderC;
+
+    House* pHouse{ nullptr };
+
+    cout << "\tChuse type hous!\n";
+    cout << "\ttype 1: +ruf, +pipe, -door, -windows\n";
+    cout << "\ttype 2: -ruf, -pipe, +door, +windows\n";
+    cout << "\ttype 3: +ruf, -pipe, +door, +windows\n";
+
+    int answer{ 0 };
+    while(answer < 1 || answer > 3)
+        cin >> answer;
+
+    switch (answer)
+    {
+    case(1):
+        pHouse = dirH.CreateHouse(builderA);
+        break;
+    case(2):
+        pHouse = dirH.CreateHouse(builderB);
+        break;
+    case(3):
+        pHouse = dirH.CreateHouse(builderC);
+        break;
+    default:
+        break;
+    }
     pHouse->SetWidth(13);
     pHouse->SetPos(80, groundY - 1);
     vecStaticObj.push_back(pHouse);

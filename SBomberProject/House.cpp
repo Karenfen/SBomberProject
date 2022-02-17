@@ -7,6 +7,17 @@
 using namespace std;
 using namespace MyTools;
 
+House::House()
+{
+	for (int i{ 0 }; i < 7; ++i)
+	{
+		for (int j{ 0 }; j < 14; ++j)
+		{
+			look[i][j] = ' ';
+		}
+	}
+}
+
 bool House::isInside(double x1, double x2) const
 {
 	const double XBeg = x + 2;
@@ -33,16 +44,20 @@ bool House::isInside(double x1, double x2) const
 void House::Draw() const
 {
 	ScreenSingleton::getInstance().SetColor(CC_Yellow);
-	ScreenSingleton::getInstance().GotoXY(x, y - 5);
-	cout << "  ########  ";
-	ScreenSingleton::getInstance().GotoXY(x, y - 4);
-	cout << "##        ##";
-	ScreenSingleton::getInstance().GotoXY(x, y - 3);
-	cout << "############";
-	ScreenSingleton::getInstance().GotoXY(x, y - 2);
-	cout << "#          #";
-	ScreenSingleton::getInstance().GotoXY(x, y - 1);
-	cout << "#          #";
-	ScreenSingleton::getInstance().GotoXY(x, y);
-	cout << "############";
+
+	for (size_t i = 0; i < 7; i++)
+	{
+		ScreenSingleton::getInstance().GotoXY(x, (y - 6 + i));
+
+		if (i == 2)
+			ScreenSingleton::getInstance().SetColor(CC_Blue);
+		if (i == 6)
+			ScreenSingleton::getInstance().SetColor(CC_Brown);
+
+		for (size_t j = 0; j < 14; j++)
+		{
+			cout << look[i][j];
+		}
+	}
+
 }
