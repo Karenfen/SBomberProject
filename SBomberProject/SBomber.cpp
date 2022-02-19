@@ -26,7 +26,7 @@ SBomber::SBomber()
 
     Plane* p = new Plane;
     p->SetDirection(1, 0.1);
-    p->SetSpeed(4);
+    p->SetSpeed(10);
     p->SetPos(5, 10);
     vecDynamicObj.push_back(p);
 
@@ -367,7 +367,7 @@ void SBomber::DropBomb()
 
         Bomb* pBomb = new Bomb;
         pBomb->SetDirection(0.3, 1);
-        pBomb->SetSpeed(2);
+        pBomb->SetSpeed(4);
         pBomb->SetPos(x, y);
         pBomb->SetWidth(SMALL_CRATER_SIZE);
 

@@ -25,7 +25,7 @@ int main(void)
             game.ProcessKBHit();
         }
 
-        std::this_thread::sleep_for(500ms);
+        std::this_thread::sleep_for(200ms);
         MyTools::ScreenSingleton::getInstance().ClrScr();
 
         game.DrawFrame();
