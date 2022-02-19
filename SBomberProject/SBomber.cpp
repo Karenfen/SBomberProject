@@ -8,6 +8,7 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "Visitor.h"
 
 using namespace std;
 using namespace MyTools;
@@ -71,6 +72,8 @@ SBomber::SBomber()
     pBomb->SetSize(SMALL_CRATER_SIZE);
     vecDynamicObj.push_back(pBomb);
     */
+
+    log_visitor = new LogVisitor;
 }
 
 SBomber::~SBomber()
@@ -90,6 +93,8 @@ SBomber::~SBomber()
             delete vecStaticObj[i];
         }
     }
+
+    delete log_visitor;
 }
 
 void SBomber::MoveObjects()
@@ -101,6 +106,7 @@ void SBomber::MoveObjects()
         if (vecDynamicObj[i] != nullptr)
         {
             vecDynamicObj[i]->Move(deltaTime);
+            vecDynamicObj[i]->Accept(log_visitor);
         }
     }
 };

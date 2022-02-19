@@ -52,4 +52,6 @@ private:
     uint64_t startTime, finishTime, passedTime;
     uint16_t bombsNumber, deltaTime, fps;
     int16_t score;
+
+    LogVisitor* log_visitor;
 };
