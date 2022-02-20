@@ -124,44 +124,28 @@ void SBomber::CheckPlaneAndLevelGUI()
 void SBomber::CheckBombsAndGround() 
 {
     vector<Bomb*> vecBombs = FindAllBombs();
+    vector<DestroyableGroundObject*> destroyObjs = FindDestoyableGroundObjects();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
+
     for (size_t i = 0; i < vecBombs.size(); i++)
     {
         if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
         {
+
+            vecBombs[i]->AddObservers(destroyObjs);
             pGround->AddCrater(vecBombs[i]->GetX());
-            CheckDestoyableObjects(vecBombs[i]);
+            DestroyableGroundObject* obj = vecBombs[i]->CheckDestoyableObjects();
+            if (obj)
+            {
+                score += obj->GetScore();
+                DeleteStaticObj(obj);
+            }
             DeleteDynamicObj(vecBombs[i]);
         }
     }
-
-    if (FindPlane()->GetY() >= y)
-    {
-        pGround->AddCrater(FindPlane()->GetX());
-        CheckDestoyableObjects(FindPlane());
-        DeleteDynamicObj(FindPlane());
-        exitFlag = true;
-    }
-
 }
 
-void SBomber::CheckDestoyableObjects(DynamicObject * pBomb)
-{
-    vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
-    const double size = pBomb->GetWidth();
-    const double size_2 = size / 2;
-    for (size_t i = 0; i < vecDestoyableObjects.size(); i++)
-    {
-        const double x1 = pBomb->GetX() - size_2;
-        const double x2 = x1 + size;
-        if (vecDestoyableObjects[i]->isInside(x1, x2))
-        {
-            score += vecDestoyableObjects[i]->GetScore();
-            DeleteStaticObj(vecDestoyableObjects[i]);
-        }
-    }
-}
 
 void SBomber::DeleteDynamicObj(DynamicObject* pObj)
 {
@@ -365,7 +349,7 @@ void SBomber::DropBomb()
         double x = pPlane->GetX() + 4;
         double y = pPlane->GetY() + 2;
 
-        Bomb* pBomb = new Bomb;
+        Bomb* pBomb = new Bomb();
         pBomb->SetDirection(0.3, 1);
         pBomb->SetSpeed(4);
         pBomb->SetPos(x, y);
