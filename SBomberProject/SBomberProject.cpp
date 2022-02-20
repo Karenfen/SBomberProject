@@ -28,9 +28,10 @@ int main(void)
         std::this_thread::sleep_for(200ms);
         MyTools::ScreenSingleton::getInstance().ClrScr();
 
-        game.DrawFrame();
+        
         game.MoveObjects();
         game.CheckObjects();
+        game.DrawFrame();
 
         game.TimeFinish();
 

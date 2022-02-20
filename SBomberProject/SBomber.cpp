@@ -28,6 +28,7 @@ SBomber::SBomber()
     p->SetDirection(1, 0.1);
     p->SetSpeed(10);
     p->SetPos(5, 10);
+    p->SetWidth(BIG_CRATER_SIZE);
     vecDynamicObj.push_back(p);
 
     LevelGUI* pGUI = new LevelGUI;
@@ -125,22 +126,23 @@ void SBomber::CheckBombsAndGround()
 {
     vector<Bomb*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
+    Plane* pPlane = FindPlane();
     const double y = pGround->GetY();
     for (size_t i = 0; i < vecBombs.size(); i++)
     {
         if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
         {
-            pGround->AddCrater(vecBombs[i]->GetX());
+            pGround->AddCrater(vecBombs[i]->GetX(), CraterSize::SMALL_CRATER_SIZE);
             CheckDestoyableObjects(vecBombs[i]);
             DeleteDynamicObj(vecBombs[i]);
         }
     }
 
-    if (FindPlane()->GetY() >= y)
+    if (pPlane->GetY() >= y)
     {
-        pGround->AddCrater(FindPlane()->GetX());
-        CheckDestoyableObjects(FindPlane());
-        DeleteDynamicObj(FindPlane());
+        pGround->AddCrater(pPlane->GetX(), CraterSize::BIG_CRATER_SIZE);
+        CheckDestoyableObjects(pPlane);
+        DeleteDynamicObj(pPlane);
         exitFlag = true;
     }
 

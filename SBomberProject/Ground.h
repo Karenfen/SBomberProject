@@ -6,9 +6,10 @@
 
 //=============================================================================================================
 
-enum CraterSize 
-{ 
-	SMALL_CRATER_SIZE = 9 
+enum CraterSize
+{
+	SMALL_CRATER_SIZE = 9,
+	BIG_CRATER_SIZE = 15
 };
 
 //=============================================================================================================
@@ -35,7 +36,7 @@ public:
 
 	void Draw() const override;
 
-	void __fastcall AddCrater(double xn);
+	void __fastcall AddCrater(double xn, CraterSize size);
 
 private:
 

@@ -17,6 +17,15 @@ void Crater::Draw() const
         ScreenSingleton::getInstance().GotoXY(x - 2, y + 2);
         cout << "=====";
     }
+    else if (width == BIG_CRATER_SIZE) // Рисование воронки в 15 символов шириной
+    {
+        ScreenSingleton::getInstance().GotoXY(x - 7, y + 1);
+        cout << "=             =";
+        ScreenSingleton::getInstance().GotoXY(x - 6, y + 2);
+        cout << "===       ===";
+        ScreenSingleton::getInstance().GotoXY(x - 3, y + 3);
+        cout << "=======";
+    }
 }
 
 bool Crater::isInside(double xn) const
@@ -88,10 +97,10 @@ bool Ground::isInsideAnyCrater(double x) const
     return isInside;
 }
 
-void Ground::AddCrater(double xn)
+void Ground::AddCrater(double xn, CraterSize size)
 {
     Crater cr;
     cr.SetPos(int(xn), y);
-    cr.SetWidth(SMALL_CRATER_SIZE);
+    cr.SetWidth(size);
     vecCrates.push_back(cr);
 }
