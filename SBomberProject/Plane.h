@@ -11,5 +11,9 @@ public:
 
 private:
 
+    virtual void DrowBody() const;
+    virtual void DrowWings() const;
+    virtual void DrowTeil() const;
+
 };
 

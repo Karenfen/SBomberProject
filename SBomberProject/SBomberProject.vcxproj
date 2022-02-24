@@ -139,7 +139,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BigPlane.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="ColorPlane.cpp" />
     <ClCompile Include="Ground.cpp" />
     <ClCompile Include="House.cpp" />
     <ClCompile Include="LevelGUI.cpp" />
@@ -150,7 +152,9 @@
     <ClCompile Include="Tank.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BigPlane.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="ColorPlane.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="DynamicObject.h" />
     <ClInclude Include="Ground.h" />

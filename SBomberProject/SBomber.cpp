@@ -1,6 +1,7 @@
 
 #include <conio.h>
 #include <windows.h>
+#include <random>
 
 #include "MyTools.h"
 #include "SBomber.h"
@@ -8,6 +9,8 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "ColorPlane.h"
+#include "BigPlane.h"
 
 using namespace std;
 using namespace MyTools;
@@ -24,7 +27,26 @@ SBomber::SBomber()
 {
     LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
 
-    Plane* p = new Plane;
+    std::random_device rd;
+    std::mt19937 rdnum(rd());
+    uint16_t chance{ rdnum() % 100 };
+    
+    Plane* p{ nullptr };
+
+    if (chance > 50)
+    {
+        p = new Plane;
+    }
+    else if (chance < 30)
+    {
+        p = new ColorPlane;
+    }
+    else
+    {
+        p = new BigPlane;
+
+    }
+    
     p->SetDirection(1, 0.1);
     p->SetSpeed(10);
     p->SetPos(5, 10);
