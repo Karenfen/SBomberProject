@@ -1,8 +1,10 @@
 
 #include <iostream>
+#include <random>
 
 #include "Tank.h"
 #include "MyTools.h"
+
 
 using namespace std;
 using namespace MyTools;
@@ -41,4 +43,32 @@ void Tank::Draw() const
 	cout << "    #####";
 	ScreenSingleton::getInstance().GotoXY(x,y);
 	cout << " ###########";
+
+	SendMessage();
+}
+
+void Tank::SetMessages()
+{
+	if (messages.empty())
+	{
+		messages.push_back("Warning!");
+		messages.push_back("Get out!");
+		messages.push_back("Ha Ha Ha!");
+		messages.push_back("Loser!");
+	}
+}
+
+void Tank::SetMediator(std::unique_ptr<Mediator> pMediator)
+{
+	m_mediator = std::move(pMediator);
+}
+
+void Tank::SendMessage() const
+{
+	std::random_device rd;
+	std::mt19937 rdnum(rd());
+	uint64_t index{ rdnum() % messages.size() };
+	auto iter = messages.begin() + index;
+	m_mediator.get()->SendMesaage(messages.at(index));
+	messages.erase(iter);
 }

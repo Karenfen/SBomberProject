@@ -157,6 +157,7 @@
     <ClInclude Include="DestroyableGroundObject.h" />
     <ClInclude Include="House.h" />
     <ClInclude Include="LevelGUI.h" />
+    <ClInclude Include="Mediator.h" />
     <ClInclude Include="MyTools.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="SBomber.h" />

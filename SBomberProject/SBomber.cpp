@@ -49,9 +49,13 @@ SBomber::SBomber()
     pGr->SetWidth(width - 2);
     vecStaticObj.push_back(pGr);
 
+    std::unique_ptr<Mediator> messanger = std::make_unique<Mediator>(pGUI);
+
     Tank* pTank = new Tank;
     pTank->SetWidth(13);
     pTank->SetPos(30, groundY - 1);
+    pTank->SetMessages();
+    pTank->SetMediator(std::move(messanger));
     vecStaticObj.push_back(pTank);
 
     pTank = new Tank;
@@ -340,6 +344,8 @@ void SBomber::DrawFrame()
     fps++;
 
     FindLevelGUI()->SetParam(passedTime, fps, bombsNumber, score);
+    FindLevelGUI()->ChangeMassege();
+
 }
 
 void SBomber::TimeStart()

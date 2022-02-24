@@ -40,6 +40,10 @@ void LevelGUI::Draw() const
     cout << "BombsNum: " << bombsNumber;
     ScreenSingleton::getInstance().GotoXY(62, 1);
     cout << "Score: " << score;
+
+    // massege
+    ScreenSingleton::getInstance().GotoXY(35, 18);
+    cout << current_message;
 }
 
 void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew)
@@ -48,4 +52,28 @@ void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint
     fps = fpsNew;
     bombsNumber = bombsNumberNew;
     score = scoreNew;
+}
+
+
+void LevelGUI::ChangeMassege()
+{
+    if ((passedTime / 1000) > timeSlot)
+    {
+        if (messages.size() != 0)
+        {
+            current_message = messages.front();
+            messages.pop();
+        }
+        else 
+        {
+            current_message = "";
+        }
+
+        timeSlot += timeSlot;
+    }
+}
+
+void LevelGUI::AddMessage(const std::string new_message)
+{
+    messages.push(new_message);
 }

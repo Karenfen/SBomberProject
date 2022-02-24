@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <queue>
 
 #include "GameObject.h"
 
@@ -18,6 +19,9 @@ public:
 
     void Draw() const override;
 
+    void AddMessage(const std::string new_message);
+    void ChangeMassege();
+
 private:
 
     uint16_t height;
@@ -26,6 +30,11 @@ private:
     uint64_t passedTime, fps;
     uint16_t bombsNumber;
     int16_t score;
+
+    std::queue<std::string> messages;
+    std::string current_message;
+    uint16_t timeSlot = 3;
+
 };
 
 
