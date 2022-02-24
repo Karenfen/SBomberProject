@@ -42,8 +42,8 @@ void LevelGUI::Draw() const
     cout << "Score: " << score;
 
     // massege
-    ScreenSingleton::getInstance().GotoXY(35, 18);
-    cout << current_message;
+    ScreenSingleton::getInstance().GotoXY(current_message.second, 18);
+    cout << current_message.first;
 }
 
 void __fastcall LevelGUI::SetParam(uint64_t passedTimeNew, uint64_t fpsNew, uint16_t bombsNumberNew, int16_t scoreNew)
@@ -64,16 +64,11 @@ void LevelGUI::ChangeMassege()
             current_message = messages.front();
             messages.pop();
         }
-        else 
-        {
-            current_message = "";
-        }
-
         timeSlot += timeSlot;
     }
 }
 
-void LevelGUI::AddMessage(const std::string new_message)
+void LevelGUI::AddMessage(const std::string new_message, uint16_t position)
 {
-    messages.push(new_message);
+    messages.push(std::make_pair(new_message, position));
 }

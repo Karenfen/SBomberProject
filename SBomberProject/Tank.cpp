@@ -47,28 +47,23 @@ void Tank::Draw() const
 	SendMessage();
 }
 
-void Tank::SetMessages()
+void Tank::SendMessage() const
 {
-	if (messages.empty())
+	if (!messages.empty())
 	{
-		messages.push_back("Warning!");
-		messages.push_back("Get out!");
-		messages.push_back("Ha Ha Ha!");
-		messages.push_back("Loser!");
+		std::random_device rd;
+		std::mt19937 rdnum(rd());
+		uint64_t index{ rdnum() % messages.size() };
+		auto iter = messages.begin() + index;
+		m_mediator.get()->SendMesaage(messages.at(index), x);
+		messages.erase(iter);
 	}
 }
 
-void Tank::SetMediator(std::unique_ptr<Mediator> pMediator)
-{
-	m_mediator = std::move(pMediator);
-}
+std::vector<std::string>Tank::messages{
+		"Warning!",
+		"Get out!",
+		"Ha Ha Ha!",
+		"Loser!"
+};
 
-void Tank::SendMessage() const
-{
-	std::random_device rd;
-	std::mt19937 rdnum(rd());
-	uint64_t index{ rdnum() % messages.size() };
-	auto iter = messages.begin() + index;
-	m_mediator.get()->SendMesaage(messages.at(index));
-	messages.erase(iter);
-}

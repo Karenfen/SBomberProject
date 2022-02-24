@@ -49,16 +49,14 @@ SBomber::SBomber()
     pGr->SetWidth(width - 2);
     vecStaticObj.push_back(pGr);
 
-    std::unique_ptr<Mediator> messanger = std::make_unique<Mediator>(pGUI);
+    std::shared_ptr<Mediator> messanger = std::make_shared<Mediator>(pGUI);
 
-    Tank* pTank = new Tank;
+    Tank* pTank = new Tank(messanger);
     pTank->SetWidth(13);
     pTank->SetPos(30, groundY - 1);
-    pTank->SetMessages();
-    pTank->SetMediator(std::move(messanger));
     vecStaticObj.push_back(pTank);
 
-    pTank = new Tank;
+    pTank = new Tank(messanger);
     pTank->SetWidth(13);
     pTank->SetPos(50, groundY - 1);
     vecStaticObj.push_back(pTank);
