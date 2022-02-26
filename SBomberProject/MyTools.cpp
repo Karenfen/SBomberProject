@@ -16,7 +16,7 @@ using namespace std;
 
 namespace MyTools {
 
-    ofstream logOut;
+    extern FileLogger logger;
 
     //=============================================================================================
 
@@ -70,16 +70,16 @@ namespace MyTools {
 
     //=============================================================================================
 
-    void __fastcall OpenLogFile(const string& FN)
+    FileLogger::FileLogger(const std::string& FN)
     {
-        logOut.open(FN, ios_base::out);
+        fopen_s(&log, FN.c_str(), "w");
     }
 
-    void CloseLogFile()
+    FileLogger::~FileLogger()
     {
-        if (logOut.is_open())
+        if (log)
         {
-            logOut.close();
+            std::fclose(log);
         }
     }
 
@@ -93,27 +93,27 @@ namespace MyTools {
         return string(buf);
     }
 
-    void __fastcall WriteToLog(const string& str)
+    void FileLogger::WriteToLog(const string& str)
     {
-        if (logOut.is_open())
+        if (log)
         {
-            logOut << GetCurDateTime() << " - " << str << endl;
+            fprintf(log, "%s %s %s %c", GetCurDateTime().c_str(), " - ", str.c_str(), '\n');
         }
     }
 
-    void __fastcall WriteToLog(const string& str, int n)
+    void FileLogger::WriteToLog(const string& str, int n)
     {
-        if (logOut.is_open())
+        if (log)
         {
-            logOut << GetCurDateTime() << " - " << str << n << endl;
+            fprintf(log, "%s %s %s %d %c", GetCurDateTime().c_str(), " - ", str.c_str(), n, '\n');
         }
     }
 
-    void __fastcall WriteToLog(const string& str, double d)
+    void FileLogger::WriteToLog(const string& str, double d)
     {
-        if (logOut.is_open())
+        if (log)
         {
-            logOut << GetCurDateTime() << " - " << str << d << endl;
+            fprintf(log, "%s %s %s %f %c", GetCurDateTime().c_str(), " - ", str.c_str(), d, '\n');
         }
     }
 

@@ -5,6 +5,7 @@
 
 namespace MyTools {
 
+
     // Палитра цветов от 0 до 15
     enum ConsoleColor
     {
@@ -40,16 +41,23 @@ namespace MyTools {
 
 	//=============================================================================================
 
-	void __fastcall OpenLogFile(const std::string& FN);
+    class FileLogger
+    {
+    public:
 
-	void CloseLogFile();
+        FileLogger(const std::string& FN);
+        ~FileLogger();
 
-	void __fastcall WriteToLog(const std::string& str);
+        void WriteToLog(const std::string& str);
 
-	void __fastcall WriteToLog(const std::string& str, int n);
+        void WriteToLog(const std::string& str, int n);
 
-	void __fastcall WriteToLog(const std::string& str, double d);
+        void WriteToLog(const std::string& str, double d);
 
-	//=============================================================================================
+    private:
+
+        FILE* log;
+    };
+
 
 };
