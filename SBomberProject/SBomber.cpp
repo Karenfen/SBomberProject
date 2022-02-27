@@ -8,11 +8,53 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "Plane.h"
+#include "LevelGUI.h"
+
 
 using namespace std;
 using namespace MyTools;
 
-SBomber::SBomber()
+
+
+//=============== Implomentation ================
+
+class SBomberImpl
+{
+protected:
+
+    SBomberImpl();
+    ~SBomberImpl();
+
+    void CheckPlaneAndLevelGUI();
+    void CheckBombsAndGround();
+    void __fastcall CheckDestoyableObjects(DynamicObject* pBomb);
+
+    void __fastcall DeleteDynamicObj(DynamicObject* pBomb);
+    void __fastcall DeleteStaticObj(GameObject* pObj);
+
+    Ground* FindGround() const;
+    Plane* FindPlane() const;
+    LevelGUI* FindLevelGUI() const;
+    std::vector<DestroyableGroundObject*> FindDestoyableGroundObjects() const;
+    std::vector<Bomb*> FindAllBombs() const;
+
+    void DropBomb();
+
+    std::vector<DynamicObject*> vecDynamicObj;
+    std::vector<GameObject*> vecStaticObj;
+
+    bool exitFlag;
+
+    uint64_t startTime, finishTime, passedTime;
+    uint16_t bombsNumber, deltaTime, fps;
+    int16_t score;
+
+    friend class SBomber;
+
+};
+
+SBomberImpl::SBomberImpl()
     : exitFlag(false),
     startTime(0),
     finishTime(0),
@@ -64,17 +106,9 @@ SBomber::SBomber()
     pHouse->SetPos(80, groundY - 1);
     vecStaticObj.push_back(pHouse);
 
-    /*
-    Bomb* pBomb = new Bomb;
-    pBomb->SetDirection(0.3, 1);
-    pBomb->SetSpeed(2);
-    pBomb->SetPos(51, 5);
-    pBomb->SetSize(SMALL_CRATER_SIZE);
-    vecDynamicObj.push_back(pBomb);
-    */
 }
 
-SBomber::~SBomber()
+SBomberImpl::~SBomberImpl()
 {
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
@@ -93,28 +127,7 @@ SBomber::~SBomber()
     }
 }
 
-void SBomber::MoveObjects()
-{
-    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
-
-    for (size_t i = 0; i < vecDynamicObj.size(); i++)
-    {
-        if (vecDynamicObj[i] != nullptr)
-        {
-            vecDynamicObj[i]->Move(deltaTime);
-        }
-    }
-};
-
-void SBomber::CheckObjects()
-{
-    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
-
-    CheckPlaneAndLevelGUI();
-    CheckBombsAndGround();
-};
-
-void SBomber::CheckPlaneAndLevelGUI()
+void SBomberImpl::CheckPlaneAndLevelGUI()
 {
     if (FindPlane()->GetX() > FindLevelGUI()->GetFinishX())
     {
@@ -122,7 +135,7 @@ void SBomber::CheckPlaneAndLevelGUI()
     }
 }
 
-void SBomber::CheckBombsAndGround() 
+void SBomberImpl::CheckBombsAndGround()
 {
     vector<Bomb*> vecBombs = FindAllBombs();
     Ground* pGround = FindGround();
@@ -148,7 +161,7 @@ void SBomber::CheckBombsAndGround()
 
 }
 
-void SBomber::CheckDestoyableObjects(DynamicObject * pBomb)
+void SBomberImpl::CheckDestoyableObjects(DynamicObject * pBomb)
 {
     vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
     const double size = pBomb->GetWidth();
@@ -165,7 +178,7 @@ void SBomber::CheckDestoyableObjects(DynamicObject * pBomb)
     }
 }
 
-void SBomber::DeleteDynamicObj(DynamicObject* pObj)
+void SBomberImpl::DeleteDynamicObj(DynamicObject* pObj)
 {
     auto it = vecDynamicObj.begin();
     for (; it != vecDynamicObj.end(); it++)
@@ -178,7 +191,7 @@ void SBomber::DeleteDynamicObj(DynamicObject* pObj)
     }
 }
 
-void SBomber::DeleteStaticObj(GameObject* pObj)
+void SBomberImpl::DeleteStaticObj(GameObject* pObj)
 {
     auto it = vecStaticObj.begin();
     for (; it != vecStaticObj.end(); it++)
@@ -191,7 +204,7 @@ void SBomber::DeleteStaticObj(GameObject* pObj)
     }
 }
 
-vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
+vector<DestroyableGroundObject*> SBomberImpl::FindDestoyableGroundObjects() const
 {
     vector<DestroyableGroundObject*> vec;
     Tank* pTank;
@@ -216,7 +229,7 @@ vector<DestroyableGroundObject*> SBomber::FindDestoyableGroundObjects() const
     return vec;
 }
 
-Ground* SBomber::FindGround() const
+Ground* SBomberImpl::FindGround() const
 {
     Ground* pGround;
 
@@ -232,7 +245,7 @@ Ground* SBomber::FindGround() const
     return nullptr;
 }
 
-vector<Bomb*> SBomber::FindAllBombs() const
+vector<Bomb*> SBomberImpl::FindAllBombs() const
 {
     vector<Bomb*> vecBombs;
 
@@ -248,7 +261,7 @@ vector<Bomb*> SBomber::FindAllBombs() const
     return vecBombs;
 }
 
-Plane* SBomber::FindPlane() const
+Plane* SBomberImpl::FindPlane() const
 {
     for (size_t i = 0; i < vecDynamicObj.size(); i++)
     {
@@ -262,7 +275,7 @@ Plane* SBomber::FindPlane() const
     return nullptr;
 }
 
-LevelGUI* SBomber::FindLevelGUI() const
+LevelGUI* SBomberImpl::FindLevelGUI() const
 {
     for (size_t i = 0; i < vecStaticObj.size(); i++)
     {
@@ -276,88 +289,7 @@ LevelGUI* SBomber::FindLevelGUI() const
     return nullptr;
 }
 
-void SBomber::ProcessKBHit()
-{
-    int c = _getch();
-
-    if (c == 224)
-    {
-        c = _getch();
-    }
-
-    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked. key = ", c);
-
-    switch (c) {
-
-    case 27: // esc
-        exitFlag = true;
-        break;
-
-    case 72: // up
-        FindPlane()->ChangePlaneY(-0.25);
-        break;
-
-    case 80: // down
-        FindPlane()->ChangePlaneY(0.25);
-        break;
-
-    case 'b':
-        if(score > 0)
-            DropBomb();
-        break;
-
-    case 'B':
-        if(score > 0)
-            DropBomb();
-        break;
-
-    default:
-        break;
-    }
-}
-
-void SBomber::DrawFrame()
-{
-    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
-
-    for (size_t i = 0; i < vecDynamicObj.size(); i++)
-    {
-        if (vecDynamicObj[i] != nullptr)
-        {
-            vecDynamicObj[i]->Draw();
-        }
-    }
-
-    for (size_t i = 0; i < vecStaticObj.size(); i++)
-    {
-        if (vecStaticObj[i] != nullptr)
-        {
-            vecStaticObj[i]->Draw();
-        }
-    }
-
-    ScreenSingleton::getInstance().GotoXY(0, 0);
-    fps++;
-
-    FindLevelGUI()->SetParam(passedTime, fps, bombsNumber, score);
-}
-
-void SBomber::TimeStart()
-{
-    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
-    startTime = GetTickCount64();
-}
-
-void SBomber::TimeFinish()
-{
-    finishTime = GetTickCount64();
-    deltaTime = uint16_t(finishTime - startTime);
-    passedTime += deltaTime;
-
-    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)deltaTime);
-}
-
-void SBomber::DropBomb()
+void SBomberImpl::DropBomb()
 {
     if (bombsNumber > 0)
     {
@@ -379,7 +311,122 @@ void SBomber::DropBomb()
     }
 }
 
+
+
+//=============== SBomber ================
+
+SBomber::SBomber() : impl(new SBomberImpl) { }
+
+SBomber::~SBomber() { delete impl; }
+
+void SBomber::MoveObjects()
+{
+    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
+
+    for (size_t i = 0; i < impl->vecDynamicObj.size(); i++)
+    {
+        if (impl->vecDynamicObj[i] != nullptr)
+        {
+            impl->vecDynamicObj[i]->Move(impl->deltaTime);
+        }
+    }
+};
+
+void SBomber::CheckObjects()
+{
+    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
+
+    impl->CheckPlaneAndLevelGUI();
+    impl->CheckBombsAndGround();
+};
+
+void SBomber::ProcessKBHit()
+{
+    int c = _getch();
+
+    if (c == 224)
+    {
+        c = _getch();
+    }
+
+    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked. key = ", c);
+
+    switch (c) {
+
+    case 27: // esc
+        impl->exitFlag = true;
+        break;
+
+    case 72: // up
+        impl->FindPlane()->ChangePlaneY(-0.25);
+        break;
+
+    case 80: // down
+        impl->FindPlane()->ChangePlaneY(0.25);
+        break;
+
+    case 'b':
+        if (impl->score > 0)
+            impl->DropBomb();
+        break;
+
+    case 'B':
+        if (impl->score > 0)
+            impl->DropBomb();
+        break;
+
+    default:
+        break;
+    }
+}
+
+void SBomber::DrawFrame()
+{
+    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
+
+    for (size_t i = 0; i < impl->vecDynamicObj.size(); i++)
+    {
+        if (impl->vecDynamicObj[i] != nullptr)
+        {
+            impl->vecDynamicObj[i]->Draw();
+        }
+    }
+
+    for (size_t i = 0; i < impl->vecStaticObj.size(); i++)
+    {
+        if (impl->vecStaticObj[i] != nullptr)
+        {
+            impl->vecStaticObj[i]->Draw();
+        }
+    }
+
+    ScreenSingleton::getInstance().GotoXY(0, 0);
+    impl->fps++;
+
+    impl->FindLevelGUI()->SetParam(impl->passedTime, impl->fps, impl->bombsNumber, impl->score);
+}
+
+void SBomber::TimeStart()
+{
+    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
+    impl->startTime = GetTickCount64();
+}
+
+void SBomber::TimeFinish()
+{
+    impl->finishTime = GetTickCount64();
+    impl->deltaTime = uint16_t(impl->finishTime - impl->startTime);
+    impl->passedTime += impl->deltaTime;
+
+    LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " deltaTime = ", (int)impl->deltaTime);
+}
+
 uint16_t SBomber::GetScore()
 {
-    return score;
+    return impl->score;
+}
+
+bool SBomber::GetExitFlag() const
+{
+    return impl->exitFlag;
 }
