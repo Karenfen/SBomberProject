@@ -46,3 +46,17 @@ void House::Draw() const
 	ScreenSingleton::getInstance().GotoXY(x, y);
 	cout << "############";
 }
+
+
+House::House(const House& p_house)
+{
+	x = p_house.x;
+	y = p_house.y;
+	width = p_house.width;
+	
+}
+
+House* House::Clone()const
+{
+	return new House(*this);
+}

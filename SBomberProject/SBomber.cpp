@@ -1,6 +1,7 @@
 
 #include <conio.h>
 #include <windows.h>
+#include <random>
 
 #include "MyTools.h"
 #include "SBomber.h"
@@ -311,6 +312,10 @@ void SBomber::ProcessKBHit()
             DropBomb();
         break;
 
+    case 'd':
+        AddClone();
+        break;
+
     default:
         break;
     }
@@ -376,6 +381,57 @@ void SBomber::DropBomb()
         vecDynamicObj.push_back(pBomb);
         bombsNumber--;
         score -= Bomb::BombCost;
+    }
+}
+
+void SBomber::AddClone()
+{
+    vector<DestroyableGroundObject*> vecDestoyableObjects = move(FindDestoyableGroundObjects());
+
+    if (!vecDestoyableObjects.empty())
+    {
+        random_device rd;
+        mt19937 rdnum(rd());
+        int index = rdnum() % vecDestoyableObjects.size();
+        auto new_obj = vecDestoyableObjects.at(index)->Clone();
+        
+        const double size = new_obj->GetWidth();
+        const double size_2 = size / 2;
+        double posX{ size_2 };
+
+        for ( ; posX < (ScreenSingleton::getInstance().GetMaxX() - size_2); ++posX)
+        {
+            bool place{ true };
+
+            for (size_t i = 0; i < vecDestoyableObjects.size(); i++)
+            {
+                if (vecDestoyableObjects[i]->isInside(posX, posX + size))
+                {
+                    place = false;
+                    continue;
+                }
+            }
+
+            if (place)
+                break;
+        }
+
+        if (posX < (ScreenSingleton::getInstance().GetMaxX() - size))
+        {
+            new_obj->SetPos(posX, new_obj->GetY());
+            vecStaticObj.push_back(new_obj);
+        }
+        else
+        {
+            delete new_obj;
+        }
+    }
+    else
+    {
+        Tank* new_obj = new Tank;
+        new_obj->SetWidth(13);
+        new_obj->SetPos(30, ScreenSingleton::getInstance().GetMaxY() - 6);
+        vecStaticObj.push_back(new_obj);
     }
 }
 

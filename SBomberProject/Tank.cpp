@@ -42,3 +42,14 @@ void Tank::Draw() const
 	ScreenSingleton::getInstance().GotoXY(x,y);
 	cout << " ###########";
 }
+
+Tank::Tank(const Tank& p_tank) {
+	x = p_tank.x;
+	y = p_tank.y;
+	width = p_tank.width;
+}
+
+Tank* Tank::Clone() const
+{
+	return new Tank(*this);
+}
