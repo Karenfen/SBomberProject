@@ -8,6 +8,10 @@
 #include "Ground.h"
 #include "Tank.h"
 #include "House.h"
+#include "Tree.h"
+#include "TreeState.h"
+
+
 
 using namespace std;
 using namespace MyTools;
@@ -63,6 +67,10 @@ SBomber::SBomber()
     pHouse->SetWidth(13);
     pHouse->SetPos(80, groundY - 1);
     vecStaticObj.push_back(pHouse);
+
+    Tree* pTree = new (nothrow) Tree(std::make_unique<SmallTree>());
+    pTree->SetPos(10, groundY - 1);
+    vecDynamicObj.push_back(pTree);
 
     /*
     Bomb* pBomb = new Bomb;
