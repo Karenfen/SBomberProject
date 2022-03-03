@@ -11,7 +11,11 @@ void Tree::Move(uint16_t time)
 		state->Grow(this, time); 
 }
 
-void Tree::Draw() const { state->Draw(this); }
+void Tree::Draw() const 
+{ 
+	if(state)
+		state->Draw(this); 
+}
 
 void Tree::SetState(std::unique_ptr <TreeState> p_state)
 {
