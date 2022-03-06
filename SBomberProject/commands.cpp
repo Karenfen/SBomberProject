@@ -24,6 +24,7 @@ void commandDeleteDynamicObj::Do()
     {
         if (*it == m_Obj)
         {
+            delete *it;
             m_vecDynamicObj.erase(it);
             break;
         }
@@ -39,6 +40,7 @@ void commandDeleteStaticObj::Do()
     {
         if (*it == m_Obj)
         {
+            delete* it;
             m_vecStaticObj.erase(it);
             break;
         }
