@@ -10,7 +10,7 @@ public:
 
     inline void ChangePlaneY(double dy) { yDirection += dy; }
 
-    void Accept(Visitor* v) override;
+    void Accept(std::shared_ptr<Visitor> v) override;
 
 private:
 

@@ -73,7 +73,7 @@ SBomber::SBomber()
     vecDynamicObj.push_back(pBomb);
     */
 
-    log_visitor = new LogVisitor;
+    log_visitor = make_shared<LogVisitor>();
 }
 
 SBomber::~SBomber()
@@ -93,8 +93,6 @@ SBomber::~SBomber()
             delete vecStaticObj[i];
         }
     }
-
-    delete log_visitor;
 }
 
 void SBomber::MoveObjects()

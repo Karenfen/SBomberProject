@@ -14,7 +14,7 @@ void Bomb::Draw() const
     cout << "*";
 }
 
-void Bomb::Accept(Visitor* v)
+void Bomb::Accept(shared_ptr<Visitor> v)
 {
     v->log(this);
 }

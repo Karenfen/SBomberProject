@@ -12,7 +12,7 @@ public:
 
 	void Draw() const override;
 
-	void Accept(Visitor* v) override;
+	void Accept(std::shared_ptr<Visitor> v) override;
 
 private:
 

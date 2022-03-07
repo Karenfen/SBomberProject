@@ -53,5 +53,5 @@ private:
     uint16_t bombsNumber, deltaTime, fps;
     int16_t score;
 
-    LogVisitor* log_visitor;
+    std::shared_ptr<Visitor> log_visitor;
 };

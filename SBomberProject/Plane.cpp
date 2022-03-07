@@ -20,7 +20,7 @@ void Plane::Draw() const
     cout << "////";
 }
 
-void Plane::Accept(Visitor* v)
+void Plane::Accept(shared_ptr<Visitor> v)
 {
     v->log(this);
 }

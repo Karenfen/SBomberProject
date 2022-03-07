@@ -21,7 +21,7 @@ public:
     
     virtual void Move(uint16_t time) { x += xDirction * speed * time * 0.001; y += yDirection * speed * time * 0.001; };
 
-    virtual void Accept(Visitor* v) = 0;
+    virtual void Accept(std::shared_ptr<Visitor> v) = 0;
 
 protected:
 
