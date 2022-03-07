@@ -9,7 +9,7 @@
 #include "Tank.h"
 
 
-class CollisionDetector;
+class CollisionDetectorI;
 
 class SBomber
 {
@@ -52,25 +52,37 @@ private:
     uint16_t bombsNumber, deltaTime, fps;
     int16_t score;
 
-    CollisionDetector *implementer;
+    CollisionDetectorI *implementer;
     friend class CollisionDetector;
 };
 
 
 //===============================
 
-class CollisionDetector
+class CollisionDetectorI
 {
 public:
 
-    CollisionDetector(SBomber* p_bomber) : bomber(p_bomber) {}
+    virtual void CheckPlaneAndLevelGUI() = 0;
+    virtual void CheckBombsAndGround() = 0;
+    virtual void CheckDestoyableObjects(DynamicObject* obj) = 0;
 
-    void CheckPlaneAndLevelGUI();
-    void CheckBombsAndGround();
-    void CheckDestoyableObjects(DynamicObject* obj);
-
-private:
+protected:
 
     SBomber* bomber;
+
+};
+
+
+
+class CollisionDetector : public CollisionDetectorI
+{
+public:
+
+    CollisionDetector(SBomber* p_bomber) { bomber = p_bomber; }
+
+    void CheckPlaneAndLevelGUI() override;
+    void CheckBombsAndGround() override;
+    void CheckDestoyableObjects(DynamicObject* obj) override;
 
 };
