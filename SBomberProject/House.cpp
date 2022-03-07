@@ -9,13 +9,7 @@ using namespace MyTools;
 
 House::House()
 {
-	for (int i{ 0 }; i < 7; ++i)
-	{
-		for (int j{ 0 }; j < 14; ++j)
-		{
-			look[i][j] = ' ';
-		}
-	}
+	memset(look, ' ', 7 * 14);
 }
 
 bool House::isInside(double x1, double x2) const

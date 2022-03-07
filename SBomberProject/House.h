@@ -35,7 +35,7 @@ public:
 	virtual ~HouseBuilder(){}
 	HouseBuilder() : m_house(nullptr) {}
 
-	virtual void CriateHouse() {}
+	void CriateHouse() { m_house = new House; }
 	virtual House* GetHouse() { return m_house; }
 
 	virtual void BuildRuf() {}
@@ -53,8 +53,6 @@ protected:
 class HouseBuilderA : public HouseBuilder
 {
 public:
-
-	void CriateHouse() override { m_house = new House; }
 
 	void BuildRuf() override 
 	{
@@ -114,8 +112,6 @@ class HouseBuilderB : public HouseBuilder
 {
 public:
 
-	void CriateHouse() override { m_house = new House; }
-
 	void BuilWalls() override
 	{
 		for (size_t i = 0; i < 14; i++)
@@ -166,8 +162,6 @@ public:
 class HouseBuilderC : public HouseBuilder
 {
 public:
-
-	void CriateHouse() override { m_house = new House; }
 
 	void BuilWalls() override
 	{
