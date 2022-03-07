@@ -135,6 +135,7 @@ void SBomber::CheckBombsAndGround()
             CheckDestoyableObjects(*itBomb);
             //DeleteDynamicObj(*itBomb);
             //--itBomb;
+            delete *itBomb;
             itBomb = erase(itBomb);
         }
     }
@@ -369,22 +370,29 @@ SBomber::BombIterator SBomber::end()
 
 SBomber::BombIterator SBomber::erase(SBomber::BombIterator it)
 {
+    vecDynamicObj.erase(vecDynamicObj.begin() + it.GetIndex());
 
-    for (auto vecIter = vecDynamicObj.begin(); vecIter != vecDynamicObj.end(); vecIter++)
+    if (it.GetIndex() == vecDynamicObj.size())
     {
-        if (*vecIter == *it)
-        {
-            vecDynamicObj.erase(vecIter);
-            break;
-        }
+        it.reset();
+        return it;
     }
 
-    return --it;
+    if (typeid(*vecDynamicObj.at(it.GetIndex())) != typeid(Bomb))
+         ++it;
+
+    return it;
 }
 
-SBomber::BombIterator::BombIterator(std::vector<DynamicObject*>& ref) : iterVector(ref), target(nullptr), curIndex(-1) { ++(*this); }
+SBomber::BombIterator::BombIterator(std::vector<DynamicObject*>& ref) : iterVector(ref), curIndex(-1) { ++(*this); }
 
-void SBomber::BombIterator::reset() { curIndex = -1; target = nullptr; }
+void SBomber::BombIterator::reset() { curIndex = -1; }
+
+int SBomber::BombIterator::GetIndex()
+{
+    return curIndex;
+}
+
 
 SBomber::BombIterator& SBomber::BombIterator::operator++()
 {
@@ -396,10 +404,8 @@ SBomber::BombIterator& SBomber::BombIterator::operator++()
     for (; curIndex < iterVector.size(); ++curIndex)
     {
 
-        Bomb* pBomb = dynamic_cast<Bomb*>(iterVector[curIndex]);
-        if (pBomb != nullptr)
+        if (typeid(*iterVector[curIndex]) == typeid(Bomb))
         {
-            target = &pBomb;
             break;
         }
     }
@@ -407,7 +413,6 @@ SBomber::BombIterator& SBomber::BombIterator::operator++()
     if (curIndex == iterVector.size())
     {
         curIndex = -1;
-        target = nullptr;
     }
 
     return *this;
@@ -422,16 +427,11 @@ SBomber::BombIterator& SBomber::BombIterator::operator--()
 
     for (; curIndex >= 0; --curIndex)
     {
-        Bomb* pBomb = dynamic_cast<Bomb*>(iterVector[curIndex]);
-        if (pBomb != nullptr)
+        if (typeid(*iterVector[curIndex]) == typeid(Bomb))
         {
-            target = &pBomb;
             break;
         }
     }
-
-    if (curIndex == -1)
-        target = nullptr;
 
     return *this;
 }
@@ -443,7 +443,7 @@ Bomb* SBomber::BombIterator::operator* ()
 
 bool SBomber::BombIterator::operator== (BombIterator it)
 {
-    return std::tie(curIndex, target, iterVector) == std::tie(it.curIndex, it.target, it.iterVector);
+    return std::tie(curIndex, iterVector) == std::tie(it.curIndex, it.iterVector);
 }
 
 bool SBomber::BombIterator::operator!=(BombIterator it)
@@ -456,7 +456,6 @@ SBomber::BombIterator& SBomber::BombIterator::operator= (const BombIterator& it)
 
     iterVector = it.iterVector;
     curIndex = it.curIndex;
-    target = it.target;
 
     return *this;
 }

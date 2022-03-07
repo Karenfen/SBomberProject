@@ -34,13 +34,13 @@ public:
     private:
 
         int curIndex;
-        Bomb** target;
         std::vector<DynamicObject*>& iterVector;
 
     public:
 
         BombIterator(std::vector<DynamicObject*>& ref);
         void reset();
+        int GetIndex();
         BombIterator& operator++();
         BombIterator& operator--();
         Bomb* operator* ();
