@@ -23,7 +23,7 @@ void Bomb::AddObservers(DestroyableGroundObject* objects)
 
 void Bomb::AddObservers(vector<DestroyableGroundObject*> objects)
 {
-    observers = objects;
+    observers = std::move(objects);
 }
 
 
@@ -31,14 +31,16 @@ DestroyableGroundObject* Bomb::CheckDestoyableObjects()
 {
     DestroyableGroundObject* toDestroy = nullptr;
 
-    for (DestroyableGroundObject* observer : observers)
+    for (auto observer = observers.begin(); observer != observers.end() ; observer++)
     {
         double Xbegin = x - (width / 2);
         double Xend = Xbegin + width;
 
-        if (observer->HandleInsideCheck(Xbegin, Xend))
+        if ((*observer)->HandleInsideCheck(Xbegin, Xend))
         {
-            return observer;
+            toDestroy = *observer;
+            observer = observers.erase(observer);
+            break;
         }
     }
 

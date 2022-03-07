@@ -124,7 +124,6 @@ void SBomber::CheckPlaneAndLevelGUI()
 void SBomber::CheckBombsAndGround() 
 {
     vector<Bomb*> vecBombs = FindAllBombs();
-    vector<DestroyableGroundObject*> destroyObjs = FindDestoyableGroundObjects();
     Ground* pGround = FindGround();
     const double y = pGround->GetY();
 
@@ -133,7 +132,7 @@ void SBomber::CheckBombsAndGround()
         if (vecBombs[i]->GetY() >= y) // Пересечение бомбы с землей
         {
 
-            vecBombs[i]->AddObservers(destroyObjs);
+            vecBombs[i]->AddObservers(std::move(FindDestoyableGroundObjects()));
             pGround->AddCrater(vecBombs[i]->GetX());
             DestroyableGroundObject* obj = vecBombs[i]->CheckDestoyableObjects();
             if (obj)
