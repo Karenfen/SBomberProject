@@ -56,7 +56,7 @@ namespace MyTools {
 
     private:
 
-        FILE* log;
+        FILE* log { };
     };
 
 
