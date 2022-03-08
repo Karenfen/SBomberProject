@@ -55,8 +55,12 @@ void Tank::SendMessage() const
 		std::mt19937 rdnum(rd());
 		uint64_t index{ rdnum() % messages.size() };
 		auto iter = messages.begin() + index;
-		m_mediator.get()->SendMesaage(messages.at(index), x);
-		messages.erase(iter);
+
+		if (m_mediator)
+		{
+			m_mediator.get()->SendMesaage(messages.at(index), x);
+			messages.erase(iter);
+		}
 	}
 }
 

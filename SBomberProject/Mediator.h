@@ -18,6 +18,7 @@ public:
 
 	void SendMesaage(const std::string& new_meassage, const uint16_t& position)
 	{
-		gui->AddMessage(new_meassage, position);
+		if(gui)
+			gui->AddMessage(new_meassage, position);
 	}
 };
