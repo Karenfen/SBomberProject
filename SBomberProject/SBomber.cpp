@@ -386,7 +386,7 @@ void SBomber::DropBomb()
 
 void SBomber::AddClone()
 {
-    vector<DestroyableGroundObject*> vecDestoyableObjects = move(FindDestoyableGroundObjects());
+    vector<DestroyableGroundObject*> vecDestoyableObjects = FindDestoyableGroundObjects();
 
     if (!vecDestoyableObjects.empty())
     {
