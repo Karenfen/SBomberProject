@@ -319,6 +319,8 @@ void SBomberImpl::DropBomb()
 
 SBomber::SBomber() : impl(make_unique<SBomberImpl>() ) { }
 
+SBomber::~SBomber() { }
+
 void SBomber::MoveObjects()
 {
     LogSingleton::getInstance().WriteToLog(string(__FUNCTION__) + " was invoked");
