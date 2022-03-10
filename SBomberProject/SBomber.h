@@ -1,13 +1,16 @@
 #pragma once
 
+
+
 class SBomberImpl;
+
+
 
 class SBomber
 {
 public:
 
     SBomber();
-    ~SBomber();
     
     bool GetExitFlag() const;
 
@@ -23,6 +26,6 @@ public:
 
 private:
 
-    SBomberImpl* impl;
+    std::unique_ptr<SBomberImpl> impl { };
 
 };

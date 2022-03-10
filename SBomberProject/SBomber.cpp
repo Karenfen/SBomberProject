@@ -21,10 +21,12 @@ using namespace MyTools;
 
 class SBomberImpl
 {
-protected:
+public:
 
     SBomberImpl();
     ~SBomberImpl();
+
+protected:
 
     void CheckPlaneAndLevelGUI();
     void CheckBombsAndGround();
@@ -315,9 +317,7 @@ void SBomberImpl::DropBomb()
 
 //=============== SBomber ================
 
-SBomber::SBomber() : impl(new SBomberImpl) { }
-
-SBomber::~SBomber() { delete impl; }
+SBomber::SBomber() : impl(make_unique<SBomberImpl>() ) { }
 
 void SBomber::MoveObjects()
 {
